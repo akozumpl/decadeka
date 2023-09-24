@@ -7,6 +7,7 @@ import cats.effect.ExitCode
 import cats.effect.IO
 import cats.effect.IOApp
 import cats.effect.std.Console
+import cats.syntax.applicative._
 import cats.syntax.flatMap._
 import cats.syntax.show._
 
@@ -64,7 +65,9 @@ object Deca extends IOApp {
     for {
       _ <- con.print(multiply.ask)
       answer <- con.readLine
-    } yield score.addResult(multiply.isCorrect(answer))
+      isCorrect = multiply.isCorrect(answer)
+      _ <- con.println("Not quite 😞.").unlessA(isCorrect)
+    } yield score.addResult(isCorrect)
   }
 
   def exercise(cmdOptions: Cmdline): IO[Scorecard] = for {
