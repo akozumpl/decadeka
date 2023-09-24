@@ -13,12 +13,12 @@ object Cmdline {
     "level",
     "highest right-hand factor to exercise (left-hand is always max 10)"
   )
-  val exerciseCount = Opts.option[Int]("count", "number of exercises to run")
+  val correctRun = Opts.option[Int]("count", "number of correct answers until pass")
 
   val decline = Command(
     "decadeka",
     "Deka trains her multiplications table before she can play Minecraft."
-  )((level, exerciseCount).tupled).map(Cmdline.apply)
+  )((level, correctRun).tupled).map(Cmdline.apply)
 
   def parse(args: List[String]): Either[String, Cmdline] =
     decline.parse(args).left.map(_.toString)
