@@ -1,2 +1,3 @@
 # decadeka
-Let Deka skill up her deca
+
+Deka trains her multiplications table before she can play Minecraft.
