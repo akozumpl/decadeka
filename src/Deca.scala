@@ -41,8 +41,8 @@ object Deca extends IOApp {
     import Rand._
     def random(rightMax: Int): State[Rand, Multiply] = for {
       swapLeftRight <- boolean
-      left <- maxInt(LeftMax + 1)
-      right <- maxInt(rightMax + 1)
+      left <- aSmallInt(LeftMax)
+      right <- aSmallInt(rightMax)
     } yield if (swapLeftRight) Multiply(right, left) else Multiply(left, right)
 
     def randomT(rightMax: Int): StateT[IO, Rand, Multiply] =
@@ -81,7 +81,7 @@ object Deca extends IOApp {
     score = Scorecard(now, 0, 0, cmdOptions.exerciseCount)
     score <- score
       .tailRecM(s => ask(cmdOptions.level, s).map(_.asEither))
-      .runA(Rand(seed))
+      .runA(Rand.build(seed))
   } yield score
 
   def run(args: List[String]): IO[ExitCode] =
