@@ -24,7 +24,7 @@ object Deca extends IOApp {
       left: Int,
       right: Int
   ) {
-    val ask: String = s"$left * $right = "
+    val ask: String = s"$left × $right = "
     val expectedResult = left * right
 
     def isCorrect(answer: String): Boolean =
