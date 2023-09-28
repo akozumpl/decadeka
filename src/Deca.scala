@@ -20,12 +20,6 @@ object Deca extends IOApp {
   val con = Console.apply[IO]
   val LeftMax = 10
 
-  given Show[Duration] = Show.show { duration =>
-    val minutes = duration.toMinutes
-    val seconds = duration.toSeconds
-    String.format("%02d:%02d", minutes, seconds)
-  }
-
   case class Multiply(
       left: Int,
       right: Int
