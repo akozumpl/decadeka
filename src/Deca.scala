@@ -3,6 +3,8 @@
 //> using dep org.typelevel::cats-effect::3.5.1
 
 import cats.Show
+import cats.data.State
+import cats.data.StateT
 import cats.effect.ExitCode
 import cats.effect.IO
 import cats.effect.IOApp
@@ -24,7 +26,7 @@ object Deca extends IOApp {
     String.format("%02d:%02d", minutes, seconds)
   }
 
-  case class Mutiply(
+  case class Multiply(
       left: Int,
       right: Int
   ) {
@@ -33,6 +35,18 @@ object Deca extends IOApp {
 
     def isCorrect(answer: String): Boolean =
       answer.toIntOption.map(_ == expectedResult).getOrElse(false)
+  }
+
+  object Multiply {
+    import Rand._
+    def random(rightMax: Int): State[Rand, Multiply] = for {
+      swapLeftRight <- boolean
+      left <- maxInt(LeftMax + 1)
+      right <- maxInt(rightMax + 1)
+    } yield if (swapLeftRight) Multiply(right, left) else Multiply(left, right)
+
+    def randomT(rightMax: Int): StateT[IO, Rand, Multiply] =
+      StateT.fromState(random(rightMax).map(IO.pure))
   }
 
   case class Scorecard(
@@ -50,31 +64,24 @@ object Deca extends IOApp {
     }
   }
 
-  object Mutiply {
-    def random(seed: Long, rightMax: Int): Mutiply = {
-      val rand = scala.util.Random(seed)
-      val swapLeftRight = rand.nextBoolean()
-      val left = rand.nextInt(LeftMax + 1)
-      val right = rand.nextInt(rightMax + 1)
-      if (swapLeftRight) Mutiply(right, left) else Mutiply(left, right)
+  def ask(level: Int, score: Scorecard): StateT[IO, Rand, Scorecard] = {
+    Multiply.randomT(level).flatMapF { multiply =>
+      for {
+        _ <- con.print(multiply.ask)
+        answer <- con.readLine
+        isCorrect = multiply.isCorrect(answer)
+        _ <- con.println("Not quite 😞.").unlessA(isCorrect)
+      } yield score.addResult(isCorrect)
     }
-  }
-
-  def ask(level: Int, seed: Long, score: Scorecard): IO[Scorecard] = {
-    val multiply = Mutiply.random(seed, level)
-    for {
-      _ <- con.print(multiply.ask)
-      answer <- con.readLine
-      isCorrect = multiply.isCorrect(answer)
-      _ <- con.println("Not quite 😞.").unlessA(isCorrect)
-    } yield score.addResult(isCorrect)
   }
 
   def exercise(cmdOptions: Cmdline): IO[Scorecard] = for {
     now <- IO.realTimeInstant
     seed = now.toEpochMilli
     score = Scorecard(now, 0, 0, cmdOptions.exerciseCount)
-    score <- score.tailRecM(s => ask(cmdOptions.level, seed, s).map(_.asEither))
+    score <- score
+      .tailRecM(s => ask(cmdOptions.level, s).map(_.asEither))
+      .runA(Rand(seed))
   } yield score
 
   def run(args: List[String]): IO[ExitCode] =
