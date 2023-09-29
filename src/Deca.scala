@@ -15,10 +15,17 @@ import cats.syntax.show._
 
 import java.time.Duration
 import java.time.Instant
+import scala.concurrent.duration
 
 object Deca extends IOApp {
   val con = Console.apply[IO]
   val LeftMax = 10
+
+  // https://typelevel.org/cats-effect/docs/core/starvation-and-tuning
+  // Disable starvation watchdog or else every laptop suspend triggers it.
+  override def runtimeConfig =
+    super.runtimeConfig
+      .copy(cpuStarvationCheckInitialDelay = duration.Duration.Inf)
 
   case class Multiply(
       left: Int,
