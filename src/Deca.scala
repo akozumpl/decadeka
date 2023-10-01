@@ -11,6 +11,7 @@ import cats.effect.IOApp
 import cats.effect.std.Console
 import cats.syntax.applicative._
 import cats.syntax.flatMap._
+import cats.syntax.monad._
 import cats.syntax.show._
 
 import java.time.Duration
@@ -59,20 +60,24 @@ object Deca extends IOApp {
     val isDone: Boolean = correct >= correctCount
     val asEither: Either[Scorecard, Scorecard] = Either.cond(isDone, this, this)
 
-    def addResult(isCorrect: Boolean): Scorecard = {
-      val bumped = copy(completed = completed + 1)
-      if (isCorrect) bumped.copy(correct = correct + 1) else bumped
-    }
+    def addSuccess(totalAttempts: Int): Scorecard =
+      copy(completed = completed + totalAttempts, correct + 1)
   }
 
+  /** Generates ans asks about the multiplication until the answer is correct. */
   def ask(level: Int, score: Scorecard): StateT[IO, Rand, Scorecard] = {
     Multiply.randomT(level).flatMapF { multiply =>
-      for {
-        _ <- con.print(multiply.ask)
-        answer <- con.readLine
-        isCorrect = multiply.isCorrect(answer)
-        _ <- con.println("Not quite 😞.").unlessA(isCorrect)
-      } yield score.addResult(isCorrect)
+      List
+        .empty[Boolean]
+        .iterateUntilM { answers =>
+          for {
+            _ <- con.print(multiply.ask)
+            answer <- con.readLine
+            isCorrect = multiply.isCorrect(answer)
+            _ <- con.println("Not quite 😞.").unlessA(isCorrect)
+          } yield isCorrect :: answers
+        }(_.headOption.contains(true))
+        .map(answers => score.addSuccess(answers.length))
     }
   }
 
