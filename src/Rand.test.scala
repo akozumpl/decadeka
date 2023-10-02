@@ -7,11 +7,11 @@ import cats.syntax.traverse._
 object RandTest extends SimpleIOSuite {
   val Seed = 2016
 
-  pureTest("Building rand immediatelly churns the seed value") {
+  pureTest("Building a Rand immediatelly churns the seed value.") {
     expect(Rand.long.runA(Rand.build(Seed)).value != Seed)
   }
 
-  pureTest("generating a 100 small integers has realistic properties") {
+  pureTest("Generating a 100 small integers has expected properties.") {
     val randomList = 0
       .until(100)
       .toList
