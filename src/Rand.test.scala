@@ -1,5 +1,3 @@
-//> using dep com.disneystreaming::weaver-cats::0.8.3
-
 import weaver.SimpleIOSuite
 
 import cats.syntax.traverse._

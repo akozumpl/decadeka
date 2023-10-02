@@ -1,7 +1,3 @@
-//> using dep com.monovore::decline::2.4.1
-//> using dep org.typelevel::cats-core::2.10.0
-//> using dep org.typelevel::cats-effect::3.5.2
-
 import cats.data.StateT
 import cats.effect.ExitCode
 import cats.effect.IO
