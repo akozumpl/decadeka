@@ -10,7 +10,7 @@ case class Multiply(
   val expectedResult = left * right
 
   def isCorrect(answer: String): Boolean =
-    answer.toIntOption.map(_ == expectedResult).getOrElse(false)
+    answer.strip.toIntOption.map(_ == expectedResult).getOrElse(false)
 }
 
 object Multiply {
