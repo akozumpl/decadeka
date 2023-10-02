@@ -13,32 +13,19 @@ import cats.syntax.monad._
 import cats.syntax.show._
 
 import java.time.Duration
-import java.time.Instant
 import scala.concurrent.duration
 
 object Deca extends IOApp {
   val con = Console.apply[IO]
 
   // https://typelevel.org/cats-effect/docs/core/starvation-and-tuning
-  // Disable starvation watchdog or else every laptop suspend triggers it.
+  // Disable starvation watchdog or else a laptop suspend triggers it.
   override def runtimeConfig =
     super.runtimeConfig
       .copy(cpuStarvationCheckInitialDelay = duration.Duration.Inf)
 
-  case class Scorecard(
-      start: Instant,
-      completed: Int,
-      correct: Int,
-      correctCount: Int
-  ) {
-    val isDone: Boolean = correct >= correctCount
-    val asEither: Either[Scorecard, Scorecard] = Either.cond(isDone, this, this)
-
-    def addSuccess(totalAttempts: Int): Scorecard =
-      copy(completed = completed + totalAttempts, correct + 1)
-  }
-
-  /** Generates ans asks about the multiplication until the answer is correct. */
+  /** Generates ans asks about the multiplication until the answer is correct.
+    */
   def ask(level: Int, score: Scorecard): StateT[IO, Rand, Scorecard] = {
     Multiply.randomT(level).flatMapF { multiply =>
       List
@@ -58,8 +45,8 @@ object Deca extends IOApp {
   def exercise(cmdOptions: Cmdline): IO[Scorecard] = for {
     now <- IO.realTimeInstant
     seed = now.toEpochMilli
-    score = Scorecard(now, 0, 0, cmdOptions.exerciseCount)
-    score <- score
+    initScore = Scorecard(now, 0, 0, cmdOptions.exerciseCount)
+    score <- initScore
       .tailRecM(s => ask(cmdOptions.level, s).map(_.asEither))
       .runA(Rand.build(seed))
   } yield score
