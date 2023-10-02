@@ -2,8 +2,6 @@
 //> using dep org.typelevel::cats-core::2.10.0
 //> using dep org.typelevel::cats-effect::3.5.2
 
-import cats.Show
-import cats.data.State
 import cats.data.StateT
 import cats.effect.ExitCode
 import cats.effect.IO
@@ -20,36 +18,12 @@ import scala.concurrent.duration
 
 object Deca extends IOApp {
   val con = Console.apply[IO]
-  val LeftMax = 10
 
   // https://typelevel.org/cats-effect/docs/core/starvation-and-tuning
   // Disable starvation watchdog or else every laptop suspend triggers it.
   override def runtimeConfig =
     super.runtimeConfig
       .copy(cpuStarvationCheckInitialDelay = duration.Duration.Inf)
-
-  case class Multiply(
-      left: Int,
-      right: Int
-  ) {
-    val ask: String = s"$left × $right = "
-    val expectedResult = left * right
-
-    def isCorrect(answer: String): Boolean =
-      answer.toIntOption.map(_ == expectedResult).getOrElse(false)
-  }
-
-  object Multiply {
-    import Rand._
-    def random(rightMax: Int): State[Rand, Multiply] = for {
-      swapLeftRight <- boolean
-      left <- aSmallInt(LeftMax)
-      right <- aSmallInt(rightMax)
-    } yield if (swapLeftRight) Multiply(right, left) else Multiply(left, right)
-
-    def randomT(rightMax: Int): StateT[IO, Rand, Multiply] =
-      StateT.fromState(random(rightMax).map(IO.pure))
-  }
 
   case class Scorecard(
       start: Instant,
