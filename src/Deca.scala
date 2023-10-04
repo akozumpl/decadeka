@@ -22,7 +22,7 @@ object Deca extends IOApp {
 
   /** Generates ans asks about the multiplication until the answer is correct.
     */
-  def ask(level: Int, score: Scorecard): StateT[IO, Rand, Scorecard] = {
+  def ask(level: SmallInt, score: Scorecard): StateT[IO, Rand, Scorecard] = {
     Multiply.randomT(level).flatMapF { multiply =>
       List
         .empty[Boolean]

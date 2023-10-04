@@ -1,9 +1,9 @@
-import weaver.SimpleIOSuite
-
 import cats.syntax.traverse._
+import weaver.SimpleIOSuite
 
 object RandTest extends SimpleIOSuite {
   val Seed = 2016
+  val Six = SmallInt.static(6)
 
   pureTest("Building a Rand immediatelly churns the seed value.") {
     expect(Rand.long.runA(Rand.build(Seed)).value != Seed)
@@ -13,7 +13,7 @@ object RandTest extends SimpleIOSuite {
     val randomList = 0
       .until(100)
       .toList
-      .traverse(_ => Rand.aSmallInt(6))
+      .traverse(_ => Rand.aSmallInt(Six))
       .runA(Rand.build(Seed))
       .value
     val zeroCount = randomList.count(_ == 0)

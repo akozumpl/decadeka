@@ -16,14 +16,14 @@ case class Multiply(
 object Multiply {
   import Rand._
 
-  val LeftMax = 10
+  val LeftMax = SmallInt.static(10)
 
-  def random(rightMax: Int): State[Rand, Multiply] = for {
+  def random(rightMax: SmallInt): State[Rand, Multiply] = for {
     swapLeftRight <- boolean
     left <- aSmallInt(LeftMax)
     right <- aSmallInt(rightMax)
   } yield if (swapLeftRight) Multiply(right, left) else Multiply(left, right)
 
-  def randomT(rightMax: Int): StateT[IO, Rand, Multiply] =
+  def randomT(rightMax: SmallInt): StateT[IO, Rand, Multiply] =
     StateT.fromState(random(rightMax).map(IO.pure))
 }

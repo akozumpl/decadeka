@@ -20,11 +20,11 @@ object Rand {
   /** Yields a non-negative integer smaller or equal to `i` with a reduced
     * probability of 0.
     */
-  def aSmallInt(max: Int): State[Rand, Int] =
+  def aSmallInt(max: SmallInt): State[Rand, Int] =
     for {
-      first <- long.map(l => Math.floorMod(l, max + 1))
+      first <- long.map(l => Math.floorMod(l, max.value + 1))
       second <-
-        if (first == 0) long.map(l => Math.floorMod(l, max + 1))
+        if (first == 0) long.map(l => Math.floorMod(l, max.value + 1))
         else State.pure(first)
     } yield second
 
