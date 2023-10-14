@@ -58,8 +58,11 @@ object Deca extends IOApp {
           score <- exercise(cmdline)
           finish <- IO.realTimeInstant
           took = Duration.between(score.start, finish)
+          tookPerExercise = took.dividedBy(score.correctCount)
           _ <- con.println(
-            show"Finiisht!\nTime it took: ${took}\nDeka strong 💪."
+            "Finiisht!\n" +
+            show"It took: ${took} in total, ${tookPerExercise} each.\n" +
+            "Deka strong 💪."
           )
         } yield ExitCode.Success
     }
