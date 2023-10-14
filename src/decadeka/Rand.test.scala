@@ -7,6 +7,14 @@ object RandTest extends SimpleIOSuite {
   val Seed = 2016
   val Six = SmallInt.static(6)
 
+  pureTest("Generates the expected distribution") {
+    val dist = Rand.buildDistribution(Six)
+    expect(dist.count(_ == 0) == 3) and
+      expect(dist.count(_ == 2) == 4) and
+      expect(dist.count(_ == 6) == 10) and
+      expect(dist.count(_ == 7) == 0)
+  }
+
   pureTest("Building a Rand immediatelly churns the seed value.") {
     expect(Rand.long.runA(Rand.build(Seed)).value != Seed)
   }

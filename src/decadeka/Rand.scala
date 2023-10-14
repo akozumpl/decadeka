@@ -22,7 +22,7 @@ object Rand {
       case _  => 10
     }
 
-  private def buildDistribution(max: SmallInt): Vector[Int] =
+  private[decadeka] def buildDistribution(max: SmallInt): Vector[Int] =
     0
       .to(max.value)
       .foldLeft(List.empty[Int]) { case (l, i) =>
