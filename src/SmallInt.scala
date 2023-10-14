@@ -7,7 +7,7 @@ case class SmallInt private (int: Int) {
 object SmallInt {
   val Limit = 20
 
-  /** Builds a valid SmallInt or throws.def
+  /** Builds a valid SmallInt or throws.
     *
     * Use for static definitions only.
     */

@@ -17,9 +17,12 @@ object RandTest extends SimpleIOSuite {
       .runA(Rand.build(Seed))
       .value
     val zeroCount = randomList.count(_ == 0)
+    val oneCount = randomList.count(_ == 1)
     expect(randomList.max == 6) and
       expect(randomList.min == 0) and
       expect(zeroCount >= 0) and
-      expect(zeroCount < 7)
+      expect(zeroCount <= 7) and
+      expect(oneCount >= 0) and
+      expect(oneCount <= 7)
   }
 }
