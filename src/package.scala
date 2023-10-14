@@ -1,3 +1,5 @@
+package decadeka
+
 import cats.Show
 
 import java.time.Duration

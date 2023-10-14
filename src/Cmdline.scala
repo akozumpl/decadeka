@@ -1,3 +1,5 @@
+package decadeka
+
 import cats.syntax.apply._
 import com.monovore.decline._
 

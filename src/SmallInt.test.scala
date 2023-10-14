@@ -1,3 +1,5 @@
+package decadeka
+
 import cats.syntax.traverse._
 import weaver.SimpleIOSuite
 

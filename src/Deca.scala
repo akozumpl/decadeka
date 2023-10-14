@@ -1,3 +1,5 @@
+package decadeka
+
 import cats.data.StateT
 import cats.effect.ExitCode
 import cats.effect.IO

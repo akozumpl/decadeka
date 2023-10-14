@@ -1,3 +1,5 @@
+package decadeka
+
 import weaver.SimpleIOSuite
 
 object MultiplyTest extends SimpleIOSuite {

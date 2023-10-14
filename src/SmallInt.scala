@@ -1,3 +1,5 @@
+package decadeka
+
 import cats.data.Validated
 
 case class SmallInt private (int: Int) {

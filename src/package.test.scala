@@ -1,3 +1,5 @@
+package decadeka
+
 import cats.syntax.show._
 import weaver.SimpleIOSuite
 

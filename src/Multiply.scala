@@ -1,3 +1,5 @@
+package decadeka
+
 import cats.data.State
 import cats.data.StateT
 import cats.effect.IO

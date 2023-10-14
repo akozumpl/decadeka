@@ -1,3 +1,5 @@
+package decadeka
+
 import cats.data.State
 
 import java.lang.Math

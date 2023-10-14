@@ -1,3 +1,5 @@
+package decadeka
+
 import java.time.Instant
 
 case class Scorecard(
