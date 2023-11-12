@@ -1,14 +1,18 @@
 package decadeka
 
+import cats.Monad
 import cats.Show
+import cats.syntax.flatMap._
+import cats.syntax.functor._
 import cats.syntax.show._
 
 import java.time.Duration
 import java.time.Instant
+import scala.annotation.tailrec
 
 case class Scorecard(
     start: Instant,
-    /** When the correct answer happened. */
+    /** The correct answers and when they happened. */
     correct: Vector[(Multiply, Instant)],
     correctCount: Int
 ) {
@@ -38,6 +42,12 @@ case class Scorecard(
       total <- totalTime
       count <- Option.when(correct.length > 0)(correct.length)
     } yield total.dividedBy(count)
+
+  def recWhileNotDone[F[_]](f: Scorecard => F[Scorecard])(using
+      M: Monad[F]
+  ): F[Scorecard] =
+    if (isDone) M.pure(this)
+    else this.tailRecM(f andThen (fs => fs.map(_.asEither)))
 
 }
 

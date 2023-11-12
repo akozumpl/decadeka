@@ -6,7 +6,6 @@ import cats.effect.IO
 import cats.effect.IOApp
 import cats.effect.std.Console
 import cats.syntax.applicative._
-import cats.syntax.flatMap._
 import cats.syntax.monad._
 import cats.syntax.show._
 
@@ -45,7 +44,7 @@ object Deca extends IOApp {
     seed = now.toEpochMilli
     initScore = Scorecard.empty(now, cmdOptions.exerciseCount)
     score <- initScore
-      .tailRecM(s => ask(cmdOptions.level, s).map(_.asEither))
+      .recWhileNotDone(s => ask(cmdOptions.level, s))
       .runA(Rand.build(seed))
   } yield score
 
