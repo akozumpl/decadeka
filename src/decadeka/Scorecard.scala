@@ -27,6 +27,18 @@ case class Scorecard(
       .sortBy(_._2)
       .reverse
   }
+
+  def totalTime: Option[Duration] =
+    correct.lastOption.map { case (_, finishInstant) =>
+      Duration.between(start, finishInstant)
+    }
+
+  def timePerAnswer: Option[Duration] =
+    for {
+      total <- totalTime
+      count <- Option.when(correct.length > 0)(correct.length)
+    } yield total.dividedBy(count)
+
 }
 
 object Scorecard {

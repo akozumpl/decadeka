@@ -17,13 +17,12 @@ object Deca extends IOApp {
   val con = Console.apply[IO]
 
   // https://typelevel.org/cats-effect/docs/core/starvation-and-tuning
-  // Disable starvation watchdog or else a laptop suspend triggers it.
+  // Disables the starvation watchdog or else a laptop suspend triggers it.
   override def runtimeConfig =
     super.runtimeConfig
       .copy(cpuStarvationCheckInitialDelay = duration.Duration.Inf)
 
-  /** Generates ans asks about the multiplication until the answer is correct.
-    */
+  /** Generates and asks about a multiplication until the answer is correct. */
   def ask(level: SmallInt, score: Scorecard): StateT[IO, Rand, Scorecard] = {
     Multiply.randomT(level).flatMapF { multiply =>
       false
@@ -57,13 +56,10 @@ object Deca extends IOApp {
       case Right(cmdline) =>
         for {
           score <- exercise(cmdline)
-          finish <- IO.realTimeInstant
-          took = Duration.between(score.start, finish)
-          tookPerExercise = took.dividedBy(score.correctCount)
           _ <- con.println(
             "Finiisht!\n" +
               show"Slowest multiplications:\n${score.byTimeTaken.take(3)}\n" +
-              show"In total it took: ${took} in total, ${tookPerExercise} on average.\n" +
+              show"In total it took: ${score.totalTime} in total, ${score.timePerAnswer} on average.\n" +
               "Deka strong 💪."
           )
         } yield ExitCode.Success
