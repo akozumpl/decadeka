@@ -1,6 +1,7 @@
 package decadeka
 
 import cats.Show
+import cats.syntax.show._
 
 import java.time.Duration
 
@@ -16,3 +17,9 @@ given Show[Duration] = Show.show { duration =>
     String.format("%.3f s", millis / 1000d)
   }
 }
+
+given Show[Vector[(Multiply, Duration)]] = Show.show(
+  _.map { case (multiply, duration) =>
+    show"$multiply: $duration"
+  }.mkString("\n")
+)

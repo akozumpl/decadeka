@@ -62,8 +62,9 @@ object Deca extends IOApp {
           tookPerExercise = took.dividedBy(score.correctCount)
           _ <- con.println(
             "Finiisht!\n" +
-            show"It took: ${took} in total, ${tookPerExercise} each.\n" +
-            "Deka strong 💪."
+              show"Slowest multiplications:\n${score.byTimeTaken.take(3)}\n" +
+              show"In total it took: ${took} in total, ${tookPerExercise} on average.\n" +
+              "Deka strong 💪."
           )
         } yield ExitCode.Success
     }

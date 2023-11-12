@@ -4,6 +4,8 @@ import cats.data.State
 import cats.data.StateT
 import cats.effect.IO
 
+import cats.Show
+
 case class Multiply(
     left: Int,
     right: Int
@@ -17,6 +19,8 @@ case class Multiply(
 
 object Multiply {
   import Rand._
+
+  given Show[Multiply] = Show.show { mul => s"${mul.left} × ${mul.right}"}
 
   val LeftMax = SmallInt.static(10)
 
