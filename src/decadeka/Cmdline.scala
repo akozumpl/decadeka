@@ -3,9 +3,6 @@ package decadeka
 import cats.syntax.apply._
 import com.monovore.decline._
 
-import java.nio.file.Path
-import cats.data.Validated
-
 case class Cmdline(
     level: SmallInt,
     exerciseCount: Int

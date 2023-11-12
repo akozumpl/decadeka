@@ -1,14 +1,11 @@
 package decadeka
 
 import cats.Monad
-import cats.Show
 import cats.syntax.flatMap._
 import cats.syntax.functor._
-import cats.syntax.show._
 
 import java.time.Duration
 import java.time.Instant
-import scala.annotation.tailrec
 
 case class Scorecard(
     start: Instant,

@@ -9,7 +9,6 @@ import cats.syntax.applicative._
 import cats.syntax.monad._
 import cats.syntax.show._
 
-import java.time.Duration
 import scala.concurrent.duration
 
 object Deca extends IOApp {
