@@ -16,4 +16,9 @@ object PackageTest extends SimpleIOSuite {
     expect(show"$duration" == "8.120 s")
   }
 
+  pureTest("Displays an empty duration correctly.") {
+    val noDuration: Option[Duration] = None
+    expect(noDuration.show == "n/a")
+  }
+
 }
