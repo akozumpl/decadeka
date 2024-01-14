@@ -5,14 +5,16 @@ import cats.effect.ExitCode
 import cats.effect.IO
 import cats.effect.IOApp
 import cats.effect.std.Console
-import cats.syntax.applicative._
-import cats.syntax.monad._
-import cats.syntax.show._
+import cats.syntax.applicative.*
+import cats.syntax.monad.*
+import cats.syntax.show.*
 
+import java.time.ZoneId
 import scala.concurrent.duration
 
 object Deca extends IOApp {
   val con = Console.apply[IO]
+  given tzimezone: ZoneId = ZoneId.systemDefault
 
   // https://typelevel.org/cats-effect/docs/core/starvation-and-tuning
   // Disables the starvation watchdog or else a laptop suspend triggers it.
@@ -56,6 +58,7 @@ object Deca extends IOApp {
           score <- exercise(cmdline)
           _ <- con.println(
             "Finiisht!\n" +
+              show"Started: ${score.start}.\n" +
               show"Slowest multiplications:\n${score.byTimeTaken.take(3)}\n" +
               show"In total it took: ${score.totalTime} in total, ${score.timePerAnswer} on average.\n" +
               "Deka strong 💪."
