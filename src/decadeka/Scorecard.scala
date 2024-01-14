@@ -1,8 +1,8 @@
 package decadeka
 
 import cats.Monad
-import cats.syntax.flatMap._
-import cats.syntax.functor._
+import cats.syntax.flatMap.*
+import cats.syntax.functor.*
 
 import java.time.Duration
 import java.time.Instant
