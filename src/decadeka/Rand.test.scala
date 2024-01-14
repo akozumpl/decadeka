@@ -1,6 +1,6 @@
 package decadeka
 
-import cats.syntax.traverse._
+import cats.syntax.traverse.*
 import weaver.SimpleIOSuite
 
 object RandTest extends SimpleIOSuite {
@@ -9,7 +9,7 @@ object RandTest extends SimpleIOSuite {
 
   pureTest("Generates the expected distribution") {
     val dist = Rand.buildDistribution(Six)
-    expect(dist.count(_ == 0) == 3) and
+    expect(dist.count(_ == 0) == 2) and
       expect(dist.count(_ == 2) == 4) and
       expect(dist.count(_ == 6) == 10) and
       expect(dist.count(_ == 7) == 0)

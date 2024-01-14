@@ -14,8 +14,8 @@ object Rand {
 
   private def magnitude(i: Int): Int =
     i match {
-      case 0  => 3
-      case 1  => 3
+      case 0  => 2
+      case 1  => 2
       case 2  => 4
       case 5  => 8
       case 10 => 2
