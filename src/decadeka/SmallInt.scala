@@ -13,7 +13,8 @@ object SmallInt {
     *
     * Use for static definitions only.
     */
-  def static(i: Int) = valid(i).toOption.get
+  def static(i: Int) =
+    valid(i).toEither.left.map(s => new IllegalArgumentException(s)).toTry.get
 
   def valid(i: Int): Validated[String, SmallInt] =
     if (i <= Limit)
